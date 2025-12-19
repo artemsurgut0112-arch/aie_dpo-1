@@ -170,12 +170,25 @@ def top_categories(
     return result
 
 
-def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> Dict[str, Any]:
+def get_problematic_columns(missing_df: pd.DataFrame, threshold: float = 0.3) -> pd.DataFrame:
     """
-    Простейшие эвристики «качества» данных:
+    Возвращает DataFrame с колонками, где доля пропусков превышает порог.
+    Параметр threshold по умолчанию 0.3 (30%).
+    """
+    if missing_df.empty:
+        return pd.DataFrame(columns=missing_df.columns)
+    return missing_df[missing_df["missing_share"] >= threshold]
+
+
+def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame, df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Эвристики «качества» данных:
     - слишком много пропусков;
     - подозрительно мало строк;
-    и т.п.
+    - константные колонки;
+    - категориальные с высокой кардинальностью;
+    - дубликаты в ID-колонках;
+    - много нулевых значений в числовых колонках.
     """
     flags: Dict[str, Any] = {}
     flags["too_few_rows"] = summary.n_rows < 100
@@ -185,12 +198,53 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
     flags["max_missing_share"] = max_missing_share
     flags["too_many_missing"] = max_missing_share > 0.5
 
-    # Простейший «скор» качества
+    #Новые эвристики
+    # 1. Проверка константных колонок (все значения одинаковые)
+    has_constant_cols = any(col.unique <= 1 for col in summary.columns)
+    flags["has_constant_columns"] = has_constant_cols
+    # 2. Проверка категориальных колонок с высокой кардинальностью
+    high_cardinality_threshold = 50  # Порог: 50 уникальных значений
+    has_high_card_cats = any(
+        not col.is_numeric and col.unique > high_cardinality_threshold
+        for col in summary.columns
+    )
+    flags["has_high_cardinality_categoricals"] = has_high_card_cats
+    # 3. Проверка дубликатов в ID-колонках
+    has_id_duplicates = False
+    for col_name in df.columns:
+        if "id" in col_name.lower():
+            non_null_count = df[col_name].notna().sum()
+            if non_null_count > 0:
+                unique_count = df[col_name].nunique()
+                if unique_count < non_null_count:
+                    has_id_duplicates = True
+                    break
+    flags["has_suspicious_id_duplicates"] = has_id_duplicates
+    # 4. Проверка много нулевых значений в числовых колонках
+    zero_threshold = 0.3  # Порог: 30% нулей
+    has_many_zeros = False
+    for col in summary.columns:
+        if col.is_numeric:
+            zero_count = (df[col.name] == 0).sum()
+            if col.non_null > 0:
+                zero_share = zero_count / col.non_null
+                if zero_share > zero_threshold:
+                    has_many_zeros = True
+                    break
+    flags["has_many_zero_values"] = has_many_zeros
     score = 1.0
-    score -= max_missing_share  # чем больше пропусков, тем хуже
+    score -= max_missing_share
     if summary.n_rows < 100:
         score -= 0.2
     if summary.n_cols > 100:
+        score -= 0.1
+    if has_constant_cols:
+        score -= 0.1
+    if has_high_card_cats:
+        score -= 0.15
+    if has_id_duplicates:
+        score -= 0.15
+    if has_many_zeros:
         score -= 0.1
 
     score = max(0.0, min(1.0, score))

@@ -11,6 +11,7 @@ from .core import (
     compute_quality_flags,
     correlation_matrix,
     flatten_summary_for_print,
+    get_problematic_columns,
     missing_table,
     summarize_dataset,
     top_categories,
@@ -67,6 +68,9 @@ def report(
     sep: str = typer.Option(",", help="Разделитель в CSV."),
     encoding: str = typer.Option("utf-8", help="Кодировка файла."),
     max_hist_columns: int = typer.Option(6, help="Максимум числовых колонок для гистограмм."),
+    top_k_categories: int = typer.Option(5, help="Количество top-значений для категориальных признаков."),
+    title: str = typer.Option("EDA-отчёт", help="Заголовок отчёта."),
+    min_missing_share: float = typer.Option(0.3, help="Порог доли пропусков (0.0-1.0) для выделения проблемных колонок."),
 ) -> None:
     """
     Сгенерировать полный EDA-отчёт:
@@ -86,10 +90,11 @@ def report(
     summary_df = flatten_summary_for_print(summary)
     missing_df = missing_table(df)
     corr_df = correlation_matrix(df)
-    top_cats = top_categories(df)
+    top_cats = top_categories(df, top_k=top_k_categories)
 
     # 2. Качество в целом
-    quality_flags = compute_quality_flags(summary, missing_df)
+    quality_flags = compute_quality_flags(summary, missing_df, df)
+    problematic_cols = get_problematic_columns(missing_df, threshold=min_missing_share)
 
     # 3. Сохраняем табличные артефакты
     summary_df.to_csv(out_root / "summary.csv", index=False)
@@ -106,12 +111,31 @@ def report(
         f.write(f"Исходный файл: `{Path(path).name}`\n\n")
         f.write(f"Строк: **{summary.n_rows}**, столбцов: **{summary.n_cols}**\n\n")
 
+        f.write("## Параметры отчёта\n\n")
+        f.write(f"- Максимум колонок в гистограммах: {max_hist_columns}\n")
+        f.write(f"- Top-k значений для категориальных признаков: {top_k_categories}\n")
+        f.write(f"- Порог доли пропусков: {min_missing_share:.1%}\n\n")
+
         f.write("## Качество данных (эвристики)\n\n")
         f.write(f"- Оценка качества: **{quality_flags['quality_score']:.2f}**\n")
         f.write(f"- Макс. доля пропусков по колонке: **{quality_flags['max_missing_share']:.2%}**\n")
         f.write(f"- Слишком мало строк: **{quality_flags['too_few_rows']}**\n")
         f.write(f"- Слишком много колонок: **{quality_flags['too_many_columns']}**\n")
-        f.write(f"- Слишком много пропусков: **{quality_flags['too_many_missing']}**\n\n")
+        f.write(f"- Слишком много пропусков: **{quality_flags['too_many_missing']}**\n")
+        #Новые эвристики
+        f.write(f"- Константные колонки: **{quality_flags['has_constant_columns']}**\n")
+        f.write(f"- Категориальные с высокой кардинальностью: **{quality_flags['has_high_cardinality_categoricals']}**\n")
+        f.write(f"- Дубликаты в ID-колонках: **{quality_flags['has_suspicious_id_duplicates']}**\n")
+        f.write(f"- Много нулевых значений: **{quality_flags['has_many_zero_values']}**\n\n")
+
+        f.write("## Проблемные колонки (с пропусками)\n\n")
+        if problematic_cols.empty:
+            f.write(f"Колонок с долей пропусков >= {min_missing_share:.1%}: нет\n\n")
+        else:
+            f.write(f"Колонки, где доля пропусков >= {min_missing_share:.1%}:\n\n")
+            for idx, (col_name, row) in enumerate(problematic_cols.iterrows(), 1):
+                f.write(f"{idx}. **{col_name}**: {row['missing_share']:.2%} пропусков ({int(row['missing_count'])} значений)\n")
+            f.write("\n")
 
         f.write("## Колонки\n\n")
         f.write("См. файл `summary.csv`.\n\n")
