@@ -57,3 +57,7 @@ logs/
 *.old
 #Специфические файлы 
 homeworks/HW08-09/data
+homeworks/HW08-09/S08-brief.md
+homeworks/HW08-09/S08-demo-01-pytorch-primer.ipynb
+homeworks/HW08-09/S08-demo-02-pytorch-mlp-basics.ipynb
+homeworks/HW08-09/S08-homework.md
