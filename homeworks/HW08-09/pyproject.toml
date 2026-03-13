@@ -1,0 +1,7 @@
+[project]
+name = "hw08-09"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
