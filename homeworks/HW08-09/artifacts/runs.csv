@@ -1,8 +1,8 @@
 experiment_id,dataset,seed,model_summary,optimizer,lr,momentum,weight_decay,epochs_trained,best_val_accuracy,best_val_loss
-E1,EMNIST,42,512-256-128/ReLU/no_dropout/no_BN,Adam,0.001,,0,15,0.8407,0.4787
-E2,EMNIST,42,512-256-128/ReLU/dropout=0.3/no_BN,Adam,0.001,,0,15,0.8508,0.4384
-E3,EMNIST,42,512-256-128/ReLU/no_dropout/BN,Adam,0.001,,0,15,0.8532,0.4324
-E4,EMNIST,42,512-256-128/ReLU/BatchNorm/EarlyStopping,Adam,0.001,,0,12,0.8532,0.4324
-O1,EMNIST,42,512-256-128/ReLU/BatchNorm,Adam,0.1,,0,7,0.8089,0.5732
-O2,EMNIST,42,512-256-128/ReLU/BatchNorm,Adam,1e-05,,0,7,0.7239,1.4011
-O3,EMNIST,42,512-256-128/ReLU/BatchNorm,SGD,0.01,0.9,0.0001,12,0.8527,0.4379
+E1,EMNIST,42,512-256-128/ReLU/no_dropout/no_BN,Adam,0.001,,0,15,0.8157,0.5253
+E2,EMNIST,42,512-256-128/ReLU/dropout=0.3/no_BN,Adam,0.001,,0,15,0.599,0.3881
+E3,EMNIST,42,512-256-128/ReLU/no_dropout/BN,Adam,0.001,,0,15,0.3116,0.2037
+E4,EMNIST,42,512-256-128/ReLU/Dropout/EarlyStopping,Adam,0.001,,0,11,0.8224,0.2839
+O1,EMNIST,42,512-256-128/ReLU/Dropout,Adam,0.1,,0,7,0.0199,3.7756
+O2,EMNIST,42,512-256-128/ReLU/Dropout,Adam,1e-05,,0,7,0.5674,1.6447
+O3,EMNIST,42,512-256-128/ReLU/Dropout,SGD,0.01,0.9,0.0001,12,0.8364,0.4547

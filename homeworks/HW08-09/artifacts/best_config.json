@@ -1,17 +1,32 @@
 {
+  "experiment": "E4",
   "dataset": "EMNIST",
   "seed": 42,
-  "input_size": 784,
-  "hidden_sizes": [
-    512,
-    256,
-    128
-  ],
-  "num_classes": 47,
-  "dropout_p": 0.0,
-  "use_batchnorm": true,
-  "optimizer": "Adam",
-  "lr": 0.001,
-  "weight_decay": 0,
-  "early_stopping_patience": 5
+  "architecture": {
+    "input_size": 784,
+    "hidden_sizes": [
+      512,
+      256,
+      128
+    ],
+    "activation": "ReLU",
+    "dropout_p": 0.3,
+    "use_batchnorm": false,
+    "num_classes": 47
+  },
+  "training": {
+    "optimizer": "Adam",
+    "lr": 0.001,
+    "weight_decay": 0,
+    "batch_size": 128,
+    "max_epochs": 30,
+    "early_stopping_patience": 5,
+    "epochs_trained": 11
+  },
+  "results": {
+    "best_val_accuracy": 0.8224,
+    "best_val_loss": 0.2839,
+    "test_accuracy": 0.6685,
+    "test_loss": 0.5725
+  }
 }

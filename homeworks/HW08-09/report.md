@@ -39,6 +39,11 @@ Flatten → Linear(784, 512) → [BN] → ReLU → [Dropout] →
 - Loss: `CrossEntropyLoss`  
 - Метрика: Accuracy
 
+**Особенности реализации:**  
+- `EarlyStopping` вынесен в отдельный класс с методами `step()` и `restore_best()`  
+- Чекпоинт сохраняется через `copy.deepcopy(state_dict)` — без риска перезаписи  
+- `evaluate()` использует декоратор `@torch.no_grad()` для экономии памяти
+
 ---
 
 ## 3. Часть A: Регуляризация (S08)
@@ -57,6 +62,10 @@ Flatten → Linear(784, 512) → [BN] → ReLU → [Dropout] →
 ### Графики (E4)
 
 ![curves_best](artifacts/figures/curves_best.png)
+
+### Сводный график E1–E4
+
+![curves_partA](artifacts/figures/curves_partA.png)
 
 ### Наблюдения
 
@@ -91,13 +100,13 @@ BatchNorm стабилизирует обучение, ускоряет сход
 ### Анализ
 
 **O1 (lr=1e-1, слишком большой):**  
-Loss нестабилен: скачет или расходится. Accuracy растёт медленно из-за слишком крупных шагов оптимизатора, который "перепрыгивает" минимум. Val accuracy составила лишь 0.8178 — заметно хуже базового E1 (0.8474) при том же числе эпох.
+Loss нестабилен: скачет или расходится. Val accuracy составила лишь 0.8178 — заметно хуже базового E1 (0.8474) при том же числе эпох. Оптимизатор делает слишком крупные шаги и «перепрыгивает» минимум функции потерь.
 
 **O2 (lr=1e-5, слишком маленький):**  
-Loss почти не убывает за 7 эпох — обучение "застыло". Шаги слишком малы, чтобы сдвинуть веса к минимуму за разумное число итераций. Val accuracy составила 0.7239 — значительно ниже всех остальных экспериментов, что хорошо видно на графике.
+Loss почти не убывает за 7 эпох — обучение «застыло». Val accuracy составила 0.7239 — значительно ниже всех остальных экспериментов, что хорошо видно на графике.
 
 **O3 (SGD + momentum=0.9 + weight_decay=1e-4):**  
-SGD с momentum ускоряет сходимость по сравнению с чистым SGD. Weight decay добавляет L2-регуляризацию, препятствуя росту весов. При LR=1e-2 за 12 эпох достигнута val_acc=0.8527 — конкурентоспособный результат относительно Adam (E4: 0.8566), хотя и уступающий ему.
+SGD с momentum ускоряет сходимость. Weight decay добавляет L2-регуляризацию, препятствуя росту весов. При LR=1e-2 за 12 эпох достигнута val_acc=0.8527 — конкурентоспособный результат относительно Adam (E4: 0.8566), хотя и уступающий ему.
 
 ---
 
@@ -120,9 +129,10 @@ SGD с momentum ускоряет сходимость по сравнению с
 |------|----------|
 | [artifacts/runs.csv](artifacts/runs.csv) | Результаты всех 7 экспериментов |
 | [artifacts/best_model.pt](artifacts/best_model.pt) | state_dict лучшей модели (E4) |
-| [artifacts/best_config.json](artifacts/best_config.json) | Конфиг лучшей модели |
+| [artifacts/best_config.json](artifacts/best_config.json) | Конфиг лучшей модели (архитектура + обучение + результаты) |
 | [artifacts/figures/curves_best.png](artifacts/figures/curves_best.png) | Loss/Acc кривые E4 |
 | [artifacts/figures/curves_lr_extremes.png](artifacts/figures/curves_lr_extremes.png) | Сравнение O1 vs O2 |
+| [artifacts/figures/curves_partA.png](artifacts/figures/curves_partA.png) | Сводный график E1–E4 (бонус) |
 
 ---
 
