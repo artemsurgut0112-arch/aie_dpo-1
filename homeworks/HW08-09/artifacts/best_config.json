@@ -1,5 +1,6 @@
 {
   "dataset": "EMNIST",
+  "emnist_split": "balanced",
   "seed": 42,
   "input_size": 784,
   "hidden_sizes": [
@@ -8,10 +9,12 @@
     128
   ],
   "num_classes": 47,
-  "dropout_p": 0.0,
-  "use_batchnorm": true,
+  "activation": "ReLU",
+  "dropout_p": "determined at runtime (best of E2/E3)",
+  "use_batchnorm": "determined at runtime (best of E2/E3)",
   "optimizer": "Adam",
   "lr": 0.001,
   "weight_decay": 0,
-  "early_stopping_patience": 5
+  "early_stopping_patience": 5,
+  "note": "This file is a template. After running HW08-09.ipynb, the actual values will be filled in automatically by the notebook."
 }
