@@ -1,0 +1,10 @@
+{
+    "model": "GRU",
+    "input_size": 1,
+    "hidden_size": 32,
+    "num_layers": 1,
+    "window_size": 14,
+    "lr": 0.001,
+    "batch_size": 32,
+    "seed": 42
+}
