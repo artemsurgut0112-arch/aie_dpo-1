@@ -1,0 +1,7 @@
+experiment_id,task,dataset,seed,model_summary,optimizer,lr,epochs_trained,best_val_accuracy,test_accuracy,precision,recall,mean_iou,notes
+C1,classification,STL-10,42,C1,SGD,0.01,20,0.588000,,,,,
+C2,classification,STL-10,42,C2,SGD,0.01,20,0.618000,,,,,
+C3,classification,STL-10,42,C3,SGD,0.01,20,0.774000,,,,,
+C4,classification,STL-10,42,C4,SGD,0.001,20,0.868000,0.863125,,,,Best
+V1,segmentation,OxfordIIITPet,42,DeepLabV3,N/A,N/A,0,,,1.000000,0.435535,0.435535,Basic
+V2,segmentation,OxfordIIITPet,42,DeepLabV3,N/A,N/A,0,,,1.000000,0.431820,0.431820,Morpho

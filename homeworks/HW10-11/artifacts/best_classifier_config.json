@@ -1,0 +1,9 @@
+{
+    "dataset": "STL-10",
+    "best_exp": "C4",
+    "image_size": 96,
+    "batch_size": 32,
+    "seed": 42,
+    "best_val_accuracy": 0.868,
+    "test_accuracy": 0.863125
+}
