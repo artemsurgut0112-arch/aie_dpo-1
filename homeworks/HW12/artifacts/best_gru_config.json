@@ -6,5 +6,6 @@
     "window_size": 14,
     "lr": 0.001,
     "batch_size": 32,
-    "seed": 42
+    "seed": 42,
+    "scaler": "StandardScaler for input sequences and target"
 }
