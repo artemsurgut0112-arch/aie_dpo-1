@@ -65,4 +65,7 @@ homeworks/HW08-09/S08-homework.md
 homeworks/HW10-11/data/
 homeworks/HW12/S12-hw-dataset.csv
 # HW13
-homeworks/HW13/results/
+homeworks/HW13/results/checkpoint-1000/optimizer.pt
+homeworks/HW13/results/checkpoint-2000/optimizer.pt
+homeworks/HW13/results/checkpoint-1000/model.safetensors
+homeworks/HW13/results/checkpoint-2000/model.safetensors
