@@ -1,0 +1,6 @@
+query,before_retrieved_sources,after_retrieved_sources,changed
+Что такое Python?,"[1, 5, 2]","[1, 5, 11]",True
+Как создать переменную в Python?,"[5, 3, 2]","[10, 5, 11]",True
+Как использовать цикл for?,"[2, 2, 2]","[2, 2, 2]",False
+Как определить функцию?,"[3, 3, 8]","[11, 3, 3]",True
+Что такое список в Python?,"[4, 5, 2]","[4, 11, 5]",True
