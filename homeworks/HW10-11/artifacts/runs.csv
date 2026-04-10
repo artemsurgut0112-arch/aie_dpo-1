@@ -1,7 +1,7 @@
-experiment_id,task,dataset,seed,model_summary,optimizer,lr,epochs_trained,best_val_accuracy,test_accuracy,precision,recall,mean_iou,notes
-C1,classification,STL-10,42,C1,SGD,0.01,20,0.588000,,,,,
-C2,classification,STL-10,42,C2,SGD,0.01,20,0.618000,,,,,
-C3,classification,STL-10,42,C3,SGD,0.01,20,0.774000,,,,,
-C4,classification,STL-10,42,C4,SGD,0.001,20,0.868000,0.863125,,,,Best
-V1,segmentation,OxfordIIITPet,42,DeepLabV3,N/A,N/A,0,,,1.000000,0.435535,0.435535,Basic
-V2,segmentation,OxfordIIITPet,42,DeepLabV3,N/A,N/A,0,,,1.000000,0.431820,0.431820,Morpho
+experiment_id,task,dataset,seed,architecture,model_summary,trainable_params,preprocessing,augmentation,optimizer,momentum,lr,epochs_trained,batch_size,best_val_accuracy,test_accuracy,precision,recall,mean_iou,notes
+C1,classification,STL-10,42,SimpleCNN (from scratch),"SimpleCNN (basic, no aug)",all from scratch,"Resize(96), ToTensor, Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])",No,SGD,0.9,0.01,20,32,0.593000,,,,,
+C2,classification,STL-10,42,SimpleCNN (from scratch),SimpleCNN (with augmentation),all from scratch,"Resize(96), ToTensor, Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])",Yes,SGD,0.9,0.01,20,32,0.620000,,,,,
+C3,classification,STL-10,42,ResNet18 (pretrained ImageNet),"ResNet18 (frozen backbone, trainable head)",only fc layer (head): 512->10,"Resize(96), ToTensor, Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])",No,SGD,0.9,0.01,20,32,0.774000,,,,,
+C4,classification,STL-10,42,ResNet18 (pretrained ImageNet),"ResNet18 (frozen layer1-3, trainable layer4+head)",layer4 + fc: (512->10 linear layer),"Resize(96), ToTensor, Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225])",No,SGD,0.9,0.001,20,32,0.868000,0.863250,,,,Best
+V1,segmentation,OxfordIIITPet,42,DeepLabV3-ResNet50 (pretrained COCO+VOC),DeepLabV3-ResNet50 inference,"N/A (pretrained, inference only)","Resize(224,224), ToTensor, Normalize(ImageNet)",No,N/A,N/A,N/A,0,1 (inference),,,1.000000,0.435736,0.435736,"V1-Baseline: Foreground=argmax(output)>0 (pet+border region). Postprocess: raw binary mask from model, no morphology. Metrics: IoU, precision, recall on 10 test samples."
+V2,segmentation,OxfordIIITPet,42,DeepLabV3-ResNet50 (pretrained COCO+VOC),DeepLabV3-ResNet50 inference,"N/A (pretrained, inference only)","Resize(224,224), ToTensor, Normalize(ImageNet)",No,N/A,N/A,N/A,0,1 (inference),,,1.000000,0.432017,0.432017,"V2-Morphology: Foreground=argmax(output)>0 (pet+border region). Postprocess: binary_closing(3x3) + binary_opening(3x3) + remove_small_components(<50px). Metrics: IoU, precision, recall on 10 test samples."
