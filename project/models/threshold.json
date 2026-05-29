@@ -1,0 +1,6 @@
+{
+  "threshold": 0.631575535040418,
+  "model": "LightGBM (Optuna)",
+  "val_f1": 0.8681,
+  "val_pr_auc": 0.8377
+}

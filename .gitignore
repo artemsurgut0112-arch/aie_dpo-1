@@ -66,3 +66,23 @@ homeworks/HW10-11/data/
 homeworks/HW12/S12-hw-dataset.csv
 # HW13
 homeworks/HW13/results/
+
+# Project — большие датасеты (>100MB, GitHub не примет)
+project/data/creditcard.csv
+project/data/raw/
+# Артефакты моделей (пересоздаются из кода)
+project/models/*.pkl
+project/models/*.joblib
+project/models/*.pt
+project/models/*.pth
+# MLflow (сохраняется в папке откуда запущен ноутбук)
+project/mlruns/
+project/notebooks/mlruns/
+
+# Кеши Python
+project/**/__pycache__/
+project/**/*.pyc
+project/.pytest_cache/
+
+# CatBoost логи (создаются при экспериментах)
+project/catboost_info/
