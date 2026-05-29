@@ -22,7 +22,7 @@ load_dotenv()
 
 MODEL_PATH        = os.getenv("MODEL_PATH",        "models/final_model.pkl")
 PREPROCESSOR_PATH = os.getenv("PREPROCESSOR_PATH", "models/preprocessor.pkl")
-THRESHOLD_PATH    = os.getenv("THRESHOLD_PATH",    "models/threshold.json")
+THRESHOLD_PATH    = os.getenv("THRESHOLD_PATH",    "artifacts/threshold.json")
 API_KEY           = os.getenv("API_KEY", "")
 
 logger = setup_logging(os.getenv("LOG_LEVEL", "INFO"))

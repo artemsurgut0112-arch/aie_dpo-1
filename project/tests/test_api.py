@@ -4,7 +4,7 @@ sys.path.insert(0, '.')
 import os
 os.environ.setdefault("MODEL_PATH",        "models/final_model.pkl")
 os.environ.setdefault("PREPROCESSOR_PATH", "models/preprocessor.pkl")
-os.environ.setdefault("THRESHOLD_PATH",    "models/threshold.json")
+os.environ.setdefault("THRESHOLD_PATH",    "artifacts/threshold.json")
 os.environ.setdefault("API_KEY",           "")
 
 from fastapi.testclient import TestClient

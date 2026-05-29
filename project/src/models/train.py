@@ -3,7 +3,7 @@
 
 Запуск из папки project/:
     python -m src.models.train
-    python -m src.models.train --data data/creditcard.csv --out models/
+    python -m src.models.train --data data/creditcard.csv --out models/ --artifacts artifacts/
 """
 
 import argparse
@@ -25,9 +25,11 @@ from src.data.pipeline import (
 )
 
 
-def train(data_path: str = "data/creditcard.csv", out_dir: str = "models/") -> dict:
+def train(data_path: str = "data/creditcard.csv", out_dir: str = "models/", artifacts_dir: str = "artifacts/") -> dict:
     out = Path(out_dir)
     out.mkdir(exist_ok=True)
+    art = Path(artifacts_dir)
+    art.mkdir(exist_ok=True)
 
     print("Загрузка данных...")
     df = load_data(data_path)
@@ -92,7 +94,7 @@ def train(data_path: str = "data/creditcard.csv", out_dir: str = "models/") -> d
         "val_f1": round(float(f1s[best_idx]), 4),
         "val_pr_auc": round(float(average_precision_score(y_val, scores_val)), 4),
     }
-    with open(out / "threshold.json", "w") as f:
+    with open(art / "threshold.json", "w") as f:
         json.dump(threshold_data, f, indent=2)
 
     model_card = f"""# Model Card — LightGBM Fraud Detector
@@ -112,16 +114,17 @@ def train(data_path: str = "data/creditcard.csv", out_dir: str = "models/") -> d
 - Признаки анонимизированы — feature engineering невозможен
 - Без мониторинга data drift не рекомендуется для продакшна
 """
-    with open(out / "model_card.md", "w") as f:
+    with open(art / "model_card.md", "w") as f:
         f.write(model_card)
 
-    print(f"Готово. Артефакты в {out}/")
+    print(f"Готово. Модели в {out}/, артефакты в {art}/")
     return metrics
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Обучение модели детекции мошенничеств")
     parser.add_argument("--data", default="data/creditcard.csv", help="Путь к датасету")
-    parser.add_argument("--out",  default="models/",             help="Папка для артефактов")
+    parser.add_argument("--out",       default="models/",    help="Папка для pkl-моделей")
+    parser.add_argument("--artifacts", default="artifacts/", help="Папка для threshold.json и model_card.md")
     args = parser.parse_args()
-    train(args.data, args.out)
+    train(args.data, args.out, args.artifacts)

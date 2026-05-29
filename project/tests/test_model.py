@@ -9,7 +9,7 @@ import joblib
 
 MODEL_PATH        = "models/final_model.pkl"
 PREPROCESSOR_PATH = "models/preprocessor.pkl"
-THRESHOLD_PATH    = "models/threshold.json"
+THRESHOLD_PATH    = "artifacts/threshold.json"
 
 
 @pytest.fixture(scope="module")

@@ -1,0 +1,16 @@
+{
+  "model": "LightGBM (Optuna)",
+  "dataset": "Credit Card Fraud Detection (ULB, Kaggle)",
+  "split": "60/20/20 train/val/test, stratified, random_state=42",
+  "val": {
+    "pr_auc": 0.8377,
+    "roc_auc": 0.9732,
+    "f1": 0.8681,
+    "threshold": 0.6316
+  },
+  "test": {
+    "pr_auc": 0.886,
+    "roc_auc": 0.979,
+    "f1": 0.862
+  }
+}
